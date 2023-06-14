@@ -1,16 +1,11 @@
 import numpy as np
+from cupyx.profiler import benchmark
+import nbody_const
 
-N_BODIES = 1000
-N_DIM = 3
-G = 6.67430e-11  # gravitational constant
-DT = 0.01  # time step
-N_STEPS = 1000
-
-class np_simulator():
-    def __init__(self, pos, vel, masses) -> None:
+class NumpySimulator():
+    def __init__(self, pos, vel) -> None:
         self.positions = pos
         self.velocities = vel
-        self.masses = masses
 
     def calculate_forces(self) -> None:
         # positions[:, np.newaxis, :] is used to introduce a new axis to the positions array.
@@ -36,38 +31,29 @@ class np_simulator():
         # multiplication with the positions_diff array, which has shape (N, N, 3).
         self.forces = np.sum(inv_distances_cubed[:, :, np.newaxis] * (positions_diff), axis=1)
 
-        # n the last line, we scale the forces by multiplying them with the product 
-        # of G (the gravitational constant) and the masses of the bodies. 
-        # masses[:, np.newaxis] is used to introduce a new axis to the masses array, 
-        # resulting in a shape (N, 1). This allows for element-wise multiplication with 
-        # the forces array, which has shape (N, 3). 
-        # The resulting forces will be scaled by the gravitational constant and the masses.
-        self.forces *= G * self.masses[:, np.newaxis]
+        # in the last line, we scale the forces by multiplying them with the product 
+        # of G (the gravitational constant). 
+        self.forces *= nbody_const.G
 
     def update_positions(self) -> None:
-        # Calculate accelerations by dividing forces by masses
-        accelerations = self.forces / self.masses[:, np.newaxis]
+        accelerations = self.forces
 
         # Update velocities based on accelerations and time step
-        self.velocities = self.velocities + accelerations * DT
+        self.velocities = self.velocities + accelerations * nbody_const.DT
 
         # Update positions based on new velocities and time step
-        self.positions = self.positions + self.velocities * DT
+        self.positions = self.positions + self.velocities * nbody_const.DT
 
 
     def simulate_n_body(self) -> None:
         # Perform simulation for the specified number of steps
-        for _ in range(N_STEPS):
+        for _ in range(nbody_const.N_STEPS):
             # Calculate forces acting on the bodies
             self.calculate_forces()
 
             # Update positions and velocities based on the forces and time step
             self.update_positions()
 
-
-# positions = np.random.rand(N_BODIES, N_DIM)
-# velocities = np.random.rand(N_BODIES, N_DIM)
-# masses = np.random.rand(N_BODIES)
-
-# # Run the simulation
-# final_positions, final_velocities = simulate_n_body(positions, velocities, masses, G, DT, N_STEPS)
+    def run_benchmark(self) -> None:
+        bench = benchmark(self.simulate_n_body, (), n_repeat=10)
+        print(bench.to_str())
