@@ -3,25 +3,27 @@ import nbody_const
 # from cupyx.profiler import benchmark
 
 def getAcc(positions, mass): 
-    # positions r = [x,y,z] for all particles
-    x = positions[:, 0:1]
-    y = positions[:, 1:2]
-    z = positions[:, 2:3]
+    # Extract x, y, z components of positions
+    x = positions[:, 0]
+    y = positions[:, 1]
+    z = positions[:, 2]
     
-    # matrix that stores all pairwise particle separations: r_j - r_i
-    dx = x.T - x
-    dy = y.T - y
-    dz = z.T - z  
+    # Calculate pairwise separations
+    dx = x[:, np.newaxis] - x
+    dy = y[:, np.newaxis] - y
+    dz = z[:, np.newaxis] - z
     
     # matrix that stores 1/r^3 for all particle pairwise particle separations 
-    inv_r3 = (dx**2 + dy**2 + dz**2 + 0.01**2)
-    inv_r3[inv_r3>0] = inv_r3[inv_r3>0]**(-1.5)
+    inv_r3 = np.sqrt(dx**2 + dy**2 + dz**2 + 0.01**2)
+    inv_r3[inv_r3>0] = inv_r3[inv_r3>0]**(-3)
+
     ax = nbody_const.G * np.matmul((dx * inv_r3), mass)
     ay = nbody_const.G * np.matmul((dy * inv_r3), mass)
     az = nbody_const.G * np.matmul((dz * inv_r3), mass)
     
     # pack together the acceleration components
-    a = np.hstack((ax, ay, az))
+    a = np.column_stack((ax, ay, az))
+
     return a
 
 def simulate_n_body(positions, mass, v0):
