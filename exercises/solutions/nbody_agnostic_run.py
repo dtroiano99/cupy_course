@@ -5,7 +5,7 @@ import nbody_agnostic as ag_nbody
 
 positions = np.random.randn(nbody_const.N_BODIES, nbody_const.N_DIM)
 velocities = np.random.randn(nbody_const.N_BODIES, nbody_const.N_DIM)
-masses = 20.0 * np.ones((nbody_const.N_BODIES, 1)) / nbody_const.N_BODIES  # total mass of particles is 20
+masses = np.random.randn(nbody_const.N_BODIES)
 
 gpu_positions = cp.asarray(positions)
 gpu_velocities = cp.asarray(velocities)
@@ -20,4 +20,3 @@ if np.allclose(ag_positions_np, cpu_gpu_pos):
     print('The positions computed on GPU are the same as the ones computed on CPU. Well done.')
 else:
     print('The positions computed on GPU are NOT the same as the ones computed on CPU. Check the code.')
-

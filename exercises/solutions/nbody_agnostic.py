@@ -1,8 +1,6 @@
 import cupy as cp
 import nbody_const
 
-from cupyx.profiler import benchmark
-
 def getAcc(positions, mass):
     xp = cp.get_array_module(positions)
 
@@ -30,7 +28,7 @@ def getAcc(positions, mass):
 def simulate_n_body(positions, mass, v0):
     xp = cp.get_array_module(positions)
     # Convert to Center-of-Mass frame
-    vel = v0 - xp.mean(mass * v0, 0) / xp.mean(mass)
+    vel = v0 - xp.mean(mass[:, xp.newaxis] * v0, 0) / xp.mean(mass)
     # calculate initial gravitational accelerations
     acc = getAcc(positions, mass)
     

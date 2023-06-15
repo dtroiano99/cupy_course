@@ -22,7 +22,7 @@ y_pred = cp.polyval(coeffs, x_cp)
 # Compute the sum of squared residuals
 ssr = cp.sum((y_cp - y_pred) ** 2)
 
-# Compute the total sum of squares
+# Compute the  total sum of squares
 sst = cp.sum((y_cp - cp.mean(y_cp)) ** 2)
 
 # Compute the coefficient of determination (R-squared)

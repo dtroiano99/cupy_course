@@ -28,7 +28,7 @@ def getAcc(positions, mass):
 
 def simulate_n_body(positions, mass, v0):
     # Convert to Center-of-Mass frame
-    vel = v0 - np.mean(mass * v0, 0) / np.mean(mass)
+    vel = v0 - np.mean(mass[:, np.newaxis] * v0, 0) / np.mean(mass)
     # calculate initial gravitational accelerations
     acc = getAcc(positions, mass)
     
