@@ -1,14 +1,23 @@
 import cupy as cp
-
+import numpy as np
 import nbody_const
-from nbody_agnostic import AgnosticSimulator
+import nbody_agnostic as ag_nbody
 
-positions = cp.random.rand(nbody_const.N_BODIES, nbody_const.N_DIM)
-velocities = cp.random.rand(nbody_const.N_BODIES, nbody_const.N_DIM)
-masses = 20.0 * cp.ones((nbody_const.N_BODIES, 1)) / nbody_const.N_BODIES  # total mass of particles is 20
+positions = np.random.randn(nbody_const.N_BODIES, nbody_const.N_DIM)
+velocities = np.random.randn(nbody_const.N_BODIES, nbody_const.N_DIM)
+masses = 20.0 * np.ones((nbody_const.N_BODIES, 1)) / nbody_const.N_BODIES  # total mass of particles is 20
 
-# instance the simulator object
-ag_simulator = AgnosticSimulator(positions, velocities)
+gpu_positions = cp.asarray(positions)
+gpu_velocities = cp.asarray(velocities)
+gpu_masses = cp.asarray(masses)
 
-# Run the simulation
-ag_simulator.simulate_n_body()
+ag_positions_np = ag_nbody.simulate_n_body(positions, masses, velocities)
+ag_positions_cp = ag_nbody.simulate_n_body(gpu_positions, gpu_masses, gpu_velocities)
+
+cpu_gpu_pos = ag_positions_cp.get()
+
+if np.allclose(ag_positions_np, cpu_gpu_pos):
+    print('The positions computed on GPU are the same as the ones computed on CPU. Well done.')
+else:
+    print('The positions computed on GPU are NOT the same as the ones computed on CPU. Check the code.')
+
