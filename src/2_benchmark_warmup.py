@@ -14,4 +14,4 @@ cpu_bench = benchmark(cpu_init, n_repeat=20)
 gpu_bench = benchmark(gpu_init, n_repeat=20)
 
 print(f'CPU version timing: {cpu_bench.to_str()}')
-print(f'GPU version timing: {gpu_bench.to_str()}')
+print(f'GPU version timing: {gpu_bench}')

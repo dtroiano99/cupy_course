@@ -15,4 +15,4 @@ def elementwise_computation(x, y, z):
 bench = benchmark(elementwise_computation, (a, b, c), n_repeat=10)
 
 # Print the result
-print(bench.to_str())
+print(bench)

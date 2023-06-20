@@ -10,4 +10,4 @@ c = cp.arange(20, 30)
 
 bench = benchmark(squared_diff, (b, c), n_repeat=10)
 
-print(bench.to_str())
+print(bench)

@@ -5,13 +5,13 @@ import time
  
 # NumPy and CPU Runtime
 cpus = time.perf_counter()
-np.ones((1000, 1000, 200))
+np.ones((1000, 1000, 500))
 cpue = time.perf_counter()
 print(f"Time consumed by numpy: {cpue - cpus}")
  
 # CuPy and GPU Runtime
 s = time.perf_counter()
-cp.ones((1000, 1000, 200))
+cp.ones((1000, 1000, 500))
 e = time.perf_counter()
 print(f"\nTime consumed by cupy: {e - s}")
 

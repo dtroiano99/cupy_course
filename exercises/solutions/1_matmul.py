@@ -25,4 +25,4 @@ cpu_bench = benchmark(np.matmul, (a, b), n_repeat=10)
 gpu_bench = benchmark(cp.matmul, (gpu_a, gpu_b), n_repeat=10)
 
 print(f'CPU time: {cpu_bench.to_str()})')
-print(f'GPU time: {gpu_bench.to_str()})')
+print(f'GPU time: {gpu_bench})')

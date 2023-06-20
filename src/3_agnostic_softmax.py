@@ -15,4 +15,4 @@ cpu_bench = benchmark(softplus, (x,), n_repeat=10)
 gpu_bench = benchmark(softplus, (x_gpu,), n_repeat=10)
 
 print(f'CPU version timing: {cpu_bench.to_str()}')
-print(f'GPU version timing: {gpu_bench.to_str()}')
+print(f'GPU version timing: {gpu_bench}')
