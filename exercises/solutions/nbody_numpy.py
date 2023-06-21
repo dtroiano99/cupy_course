@@ -9,6 +9,14 @@ def getAcc(positions, mass):
     z = positions[:, 2]
     
     # Calculate pairwise separations
+    # np.newaxis is a special constant in NumPy that is used to 
+    # increase the dimensions of an array by one. It is often used 
+    # to convert a 1D array into a 2D array.
+    # The result of this operation is a 2D array where each element 
+    # represents the difference between the corresponding elements in x. 
+    # The shape of the resulting array will be (n, n), where n is the 
+    # number of elements in x. The element at position (i, j) in the 
+    # resulting array will be x[i] - x[j].
     dx = x[:, np.newaxis] - x
     dy = y[:, np.newaxis] - y
     dz = z[:, np.newaxis] - z
